@@ -73,6 +73,20 @@ int main() {
     Matrix result = a * b;
     std::cout << "Result" << std::endl;
     result.print();
+
+    std::cout << "Dot" << std::endl;
+    Matrix a_dot(
+{
+        {1, 2, 3}
+        }
+    );
+    Matrix b_dot(
+{
+        {2, 3, 4}
+        }
+    );
+    const double dotted = dot(a_dot, b_dot);
+    std::cout << "Dotted " << dotted << std::endl;
     return 0;
     // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }

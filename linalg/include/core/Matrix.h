@@ -6,6 +6,7 @@
 #pragma once // tells the compiler to only include this file once.
 #include <vector>
 #include <functional>
+#include <tuple>
 #ifndef ML_CPP_MATRIX_H
 #define ML_CPP_MATRIX_H
 
@@ -41,8 +42,15 @@ public:
     // matmul
     Matrix operator*(const Matrix& other) const;
     [[nodiscard]] Matrix transpose() const;
+    [[nodiscard]] static Matrix identity(int n);
+    std::tuple<int, int> shape = std::make_tuple(rows, cols);
+    bool IsOneDimensional() const {
+        return rows == 1 || cols == 1;
+    }
 };
 
+
+double dot(const Matrix& a, const Matrix& b);
 
 
 #endif //ML_CPP_MATRIX_H

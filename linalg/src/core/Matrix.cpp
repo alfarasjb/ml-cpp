@@ -65,6 +65,7 @@ Matrix Matrix::operator*(const double scalar) const {
     return new_matrix;
 }
 
+// matmul
 Matrix Matrix::operator*(const Matrix& other) const {
     // check dimensions first. inner dimensions must be equal
     if (cols != other.rows) {
@@ -102,4 +103,44 @@ void Matrix::print() const {
         }
         std::cout << std::endl;
     }
+}
+
+Matrix Matrix::identity(const int n) {
+    // returns nxn matrix with 1 as the diagonal, and 0 everywhere else
+    // n should be non-zero
+    if (n == 0) {
+        throw std::runtime_error("Identity matrix should be non-zero.");
+    }
+    Matrix result(n, n); // nxn matrix
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (i == j) {
+                // diagonal
+                result.data[i][j] = 1.0;
+            }
+        }
+    }
+    return result;
+}
+static Matrix convert_column_vector_to_row_vector(const Matrix &vector) {
+    if (vector.data[0].size() > 1 && vector.data.size() == 1) {
+        // already a row vector
+        return vector;
+    }
+    // if not, then transpose
+    return vector.transpose();
+}
+double dot (const Matrix& a, const Matrix& b) {
+    // nx1 matrix only.
+    // num cols a = num rows b
+    // transpose conditions: if len a == len b, then transpose
+    if (!a.IsOneDimensional() || !b.IsOneDimensional()) {
+        throw std::runtime_error("Only Nx1 Matrix is allowed.");
+    }
+    const Matrix a_transposed = convert_column_vector_to_row_vector(a);
+    const Matrix b_transposed = convert_column_vector_to_row_vector(b);
+    if (a_transposed.cols != b_transposed.cols) {
+        throw std::runtime_error("Matrix does not have the same dimensionality.");
+    }
+    return (a_transposed * b_transposed.transpose()).data[0][0];
 }
