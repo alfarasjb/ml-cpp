@@ -1,87 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <core/Matrix.h>
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
-using Matrix2D = std::vector<std::vector<double>>;
-
-class Matrix {
-protected:
-private:
-public:
-    int rows;
-    int cols;
-    Matrix2D data;
-    Matrix(int rows, int cols) : rows { rows }, cols { cols }, data(rows, std::vector<double>(cols)){
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                data[i][j] = 0.0;
-            }
-        }
-    }
-    Matrix(int rows, int cols, double val) : rows { rows }, cols { cols }, data(rows, std::vector<double>(cols)){
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                data[i][j] = val;
-            }
-        }
-    }
-    Matrix(Matrix2D data) : rows { static_cast<int>(data.size()) }, cols { static_cast<int>(data[0].size()) }, data(data) {}
-    void print() {
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                std::cout<< data[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
-    }
-    Matrix operator+(const Matrix& other) {
-        if (rows != other.rows || cols != other.cols) {
-            // Fail
-            throw std::runtime_error("Matrix size does not match");
-        }
-        Matrix new_matrix = Matrix(rows, cols);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                new_matrix.data[i][j] = data[i][j] + other.data[i][j];
-            }
-        }
-        return new_matrix;
-    }
-    Matrix operator-(const Matrix& other) {
-        if (rows != other.rows || cols != other.cols) {
-            // Fail here as well
-            throw std::runtime_error("Matrix size does not match");
-        }
-        Matrix new_matrix = Matrix(rows, cols);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                new_matrix.data[i][j] = data[i][j] - other.data[i][j];
-            }
-        }
-        return new_matrix;
-    }
-    Matrix operator*(double scalar) {
-        Matrix new_matrix = Matrix(rows, cols);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                new_matrix.data[i][j] = scalar * data[i][j];
-            }
-        }
-        return new_matrix;
-    }
-    Matrix operator*(const Matrix& other) {
-        // TODO
-    }
-    Matrix transpose() {
-        Matrix new_matrix = Matrix(cols, rows);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                new_matrix.data[j][i] = data[i][j];
-            }
-        }
-        return new_matrix;
-    }
-};
 
 
 int main() {
