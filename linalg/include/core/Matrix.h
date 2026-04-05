@@ -47,6 +47,10 @@ public:
     bool IsOneDimensional() const {
         return rows == 1 || cols == 1;
     }
+    bool IsSquareMatrix() const {
+        return rows == cols;
+    }
+    Matrix inverse();
 };
 
 

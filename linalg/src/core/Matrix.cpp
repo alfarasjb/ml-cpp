@@ -3,7 +3,7 @@
 //
 
 #include "../../include/core/Matrix.h"
-
+#include "../../include/core/MatrixHelpers.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -143,4 +143,21 @@ double dot (const Matrix& a, const Matrix& b) {
         throw std::runtime_error("Matrix does not have the same dimensionality.");
     }
     return (a_transposed * b_transposed.transpose()).data[0][0];
+}
+
+Matrix Matrix::inverse() {
+    Matrix a(*this);  // work on a copy
+    Matrix identity = identity_matrix(a);
+    for (int k = 0; k < cols; ++k) {
+        // k is the pivot column.
+        // for the pivot column, find the max row index.
+        int max_row = find_max_row_for_matrix(a, k);
+        if (max_row != k) {
+            std::swap(a.data[k], a.data[max_row]);
+            std::swap(identity.data[k], identity.data[max_row]);
+        }
+        scale_pivot_column(a, k, identity);
+        zero_out(a, k, identity);
+    }
+    return identity;
 }
