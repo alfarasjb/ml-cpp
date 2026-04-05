@@ -65,6 +65,26 @@ Matrix Matrix::operator*(const double scalar) const {
     return new_matrix;
 }
 
+Matrix Matrix::operator*(const Matrix& other) const {
+    // check dimensions first. inner dimensions must be equal
+    if (cols != other.rows) {
+        throw std::runtime_error("Matrix inner dimensions do not match");
+    }
+    // create a result matrix of size i and j (rows, and other.cols)
+    Matrix result(rows, other.cols);
+    const int inner = cols; // or other.rows. since they should be equal
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < other.cols; ++j) {
+            double sum = 0.0;
+            for (int k = 0; k < inner; ++k) {
+                sum += data[i][k] * other.data[k][j];
+            }
+            result.data[i][j] = sum;
+        }
+    }
+    return result;
+}
+
 Matrix Matrix::transpose() const {
     Matrix new_matrix(cols, rows);
     for (int i = 0; i < rows; ++i) {

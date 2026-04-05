@@ -39,7 +39,7 @@ public:
     //scalar multiplication
     Matrix operator*(double scalar) const;
     // matmul
-    Matrix operator*(const Matrix& other);
+    Matrix operator*(const Matrix& other) const;
     [[nodiscard]] Matrix transpose() const;
 };
 

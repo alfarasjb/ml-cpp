@@ -8,11 +8,11 @@
 int main() {
     // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
     std::cout << "Zero Matrix" << std::endl;
-    Matrix mtx = Matrix(3, 3);
+    Matrix mtx(3, 3);
     mtx.print();
 
     std::cout << "Ones Matrix" << std::endl;
-    Matrix mtx_one = Matrix(3, 3, 1);
+    Matrix mtx_one(3, 3, 1);
     mtx_one.print();
 
     std::cout << "Matrix Addition" << std::endl;
@@ -34,8 +34,8 @@ int main() {
         {31, 36, 87, 69},
         {54, 56, 73, 11}
     };
-    Matrix cmpl = Matrix(complex_matrix);
-    Matrix cmpl2 = Matrix(complex_matrix2);
+    Matrix cmpl(complex_matrix);
+    Matrix cmpl2(complex_matrix2);
     Matrix sum = cmpl + cmpl2;
     std::cout << "Sum Matrix" << std::endl;
     sum.print();
@@ -50,6 +50,29 @@ int main() {
     Matrix transposed_matrix = cmpl.transpose();
     std::cout << "Transpose Matrix" << std::endl;
     transposed_matrix.print();
+
+    // matmul
+    std::cout << "Matrix Multiplication" << std::endl;
+    Matrix a(
+        {
+        {1, 2, 3},
+        {4, 5, 6}
+        }
+    );
+    Matrix b(
+        {
+        {7, 8},
+        {9, 10},
+        {11, 12}
+        }
+    );
+    std::cout << "Matrix A" << std::endl;
+    a.print();
+    std::cout << "Matrix B" << std::endl;
+    b.print();
+    Matrix result = a * b;
+    std::cout << "Result" << std::endl;
+    result.print();
     return 0;
     // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
