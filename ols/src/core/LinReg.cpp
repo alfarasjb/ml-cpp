@@ -6,10 +6,10 @@
 #include <vector>
 #include <cmath>
 
-Matrix prepend_ones(Matrix& X) {
-    Matrix x_aug(X.rows, X.cols + 1, 1);
-    for (int i = 0; i < x_aug.rows; ++i) {
-        for (int j = 1; j < x_aug.cols; ++j) {
+Matrix prepend_ones(const Matrix& X) {
+    Matrix x_aug(X.rows(), X.cols() + 1, 1);
+    for (int i = 0; i < x_aug.rows(); ++i) {
+        for (int j = 1; j < x_aug.cols(); ++j) {
             // start iterating from column index 1 (second column)
             // since we already have a 1s matrix from instantiation.
             x_aug.data[i][j] = X.data[i][j - 1];
@@ -19,42 +19,46 @@ Matrix prepend_ones(Matrix& X) {
 }
 
 void LinReg::fit(
-    Matrix& X, // raw feature matrix
-    Matrix& Y //note: this is a column vector
+    const Matrix& X, // raw feature matrix
+    const Matrix& Y //note: this is a column vector
 ) {
+    // reset metrics
+    ssr_ = 0;
+    sst_ = 0;
+    fitted_ = false;
     // goal: calculate beta.
     Matrix X_aug = prepend_ones(X);
-    Matrix X_transposed = X_aug.transpose();
+    const Matrix X_transposed = X_aug.transpose();
     // this is 2x1 or 1x2 idk
-    _beta = (X_transposed * X_aug).inverse() * X_transposed * Y;
+    beta_ = (X_transposed * X_aug).inverse() * X_transposed * Y;
 
     // calculate metrics
-    Matrix y_row = Y.IsColumnVector() ? Y.transpose() : Y;
+    const Matrix y_row = Y.is_column_vector() ? Y.transpose() : Y;
 
     // calculate y_bar
     double total = 0.0;
-    for (int i = 0; i < y_row.cols; ++i) {
+    for (int i = 0; i < y_row.cols(); ++i) {
         total += y_row.data[0][i];
     }
-    double y_bar = total / y_row.cols;
+    const double y_bar = total / y_row.cols();
 
     // predict
-    _y_pred = predict(X_aug); // idk the shape
-    for (int i = 0; i < Y.rows; ++i) {
+    y_pred_ = predict(X_aug); // idk the shape
+    for (int i = 0; i < Y.rows(); ++i) {
         const double y_i = Y.data[i][0];
-        const double f_i = _y_pred.data[i][0];
-        _ssr += std::pow(y_i - f_i, 2);
-        _sst += std::pow(y_i - y_bar, 2);
+        const double f_i = y_pred_.data[i][0];
+        ssr_ += std::pow(y_i - f_i, 2);
+        sst_ += std::pow(y_i - y_bar, 2);
     }
-    fitted = true; // set fitted flag to true
+    fitted_ = true; // set fitted flag to true
 }
 
-Matrix LinReg::predict(Matrix& X) {
-    Matrix y_hat = X * _beta;
+Matrix LinReg::predict(const Matrix& X) const {
+    Matrix y_hat = X * beta_;
     return y_hat;
 }
 
 double LinReg::r_squared() const {
-    return 1 - _ssr / _sst;
+    return 1 - ssr_ / sst_;
 }
 

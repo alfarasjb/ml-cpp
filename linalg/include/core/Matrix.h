@@ -22,9 +22,10 @@ private:
         // and returns a type `double`
         const std::function<double(double, double)>& op
     ) const;
+    int rows_, cols_;
 public:
-    int rows;
-    int cols;
+    [[nodiscard]] int rows() const { return rows_; }
+    [[nodiscard]] int cols() const { return cols_; }
     Matrix2D data;
     // zero matrix with specific dimensions
     Matrix(int rows, int cols);
@@ -43,20 +44,21 @@ public:
     Matrix operator*(const Matrix& other) const;
     [[nodiscard]] Matrix transpose() const;
     [[nodiscard]] static Matrix identity(int n);
-    std::tuple<int, int> shape = std::make_tuple(rows, cols);
-    bool IsOneDimensional() const {
-        return rows == 1 || cols == 1;
+    [[nodiscard]] std::tuple<int, int> shape() const { return { rows_, cols_ }; }
+
+    bool is_one_dimensional() const {
+        return rows_ == 1 || cols_ == 1;
     }
-    bool IsSquareMatrix() const {
-        return rows == cols;
+    bool is_square_matrix() const {
+        return rows_ == cols_;
     }
-    bool IsRowVector() const {
-        return cols == 1;
+    bool is_row_vector() const {
+        return rows_ == 1;
     }
-    bool IsColumnVector() const {
-        return rows == 1;
+    bool is_column_vector() const {
+        return cols_ == 1;
     }
-    Matrix inverse();
+    [[nodiscard]] Matrix inverse() const;
 };
 
 

@@ -12,33 +12,33 @@ class LinReg {
 protected:
 private:
     // these properties will be set AFTER fitting.
-    double _ssr = 0; // sum of squared residuals
-    double _sst = 0; // total sum of squares
-    double _y_bar = 0; // mean of observed data
-    bool fitted = false;
-    Matrix _beta; // coefficients. should be 2x1 matrix where _beta_0 is slope, _beta_1 is intercept
-    Matrix _y_pred; // predicted values (we will use this for calculating metrics)
+    double ssr_ = 0; // sum of squared residuals
+    double sst_ = 0; // total sum of squares
+    double y_bar_ = 0; // mean of observed data
+    bool fitted_ = false;
+    Matrix beta_; // coefficients. should be 2x1 matrix where _beta_0 is slope, _beta_1 is intercept
+    Matrix y_pred_; // predicted values (we will use this for calculating metrics)
 public:
-    double ssr() const { return _ssr; }
-    double sst() const { return _sst; }
-    double y_bar() const { return _y_bar; }
-    Matrix beta() const { return _beta; }
+    [[nodiscard]] double ssr() const { return ssr_; }
+    [[nodiscard]] double sst() const { return sst_; }
+    [[nodiscard]] double y_bar() const { return y_bar_; }
+    [[nodiscard]] Matrix beta() const { return beta_; }
     // fit should call the predict function so we can calculate r_squared.
     // after predicting, we should set ssr and sst. these won't change.
     // everytime the data would change, we would need to call fit, which calls predict
     // which subsequently creates new ssr and sst.
-    void fit(Matrix& X, Matrix& Y);
-    Matrix predict(Matrix& X); // returns predictions from feature matrix
+    void fit(const Matrix& X, const Matrix& Y);
+    [[nodiscard]] Matrix predict(const Matrix& X) const; // returns predictions from feature matrix
     // calculated only when called
-    double r_squared() const;
-    LinReg(): _beta(Matrix(0, 0)), _y_pred(Matrix(0, 0)) {};
+    [[nodiscard]] double r_squared() const;
+    LinReg(): beta_(Matrix(0, 0)), y_pred_(Matrix(0, 0)) {};
     void print_stats() const {
         std::cout << "R_2: " << r_squared() << std::endl;
-        std::cout << "Beta_0: " << _beta.data[0][0] << std::endl;
-        std::cout << "Beta_1: " << _beta.data[1][0] << std::endl;
-        std::cout << "SSR: " << _ssr << std::endl;
-        std::cout << "SST: " << _sst << std::endl;
-        _beta.print();
+        std::cout << "Beta_0: " << beta_.data[0][0] << std::endl;
+        std::cout << "Beta_1: " << beta_.data[1][0] << std::endl;
+        std::cout << "SSR: " << ssr_ << std::endl;
+        std::cout << "SST: " << sst_ << std::endl;
+        beta_.print();
     }
 };
 
