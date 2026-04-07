@@ -5,8 +5,6 @@
 #include "../../include/core/LinReg.h"
 #include <vector>
 #include <cmath>
-#include <matplot/matplot.h>
-#include <ranges>
 
 #include "../../../plots/include/plots.h"
 

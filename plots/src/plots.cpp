@@ -1,20 +1,12 @@
 #include <matplot/matplot.h>
 
-void demo_plot() {
-    using namespace matplot;
-    auto x = linspace(0, 2 * pi, 100);
-    auto y = transform(x, [](double v) { return std::sin(v); });
-    plot(x, y);
-    title("Sin(x) - POC");
-    show();
-}
 
 void scatter_with_line(
-    std::vector<double> X,
-    std::vector<double> Y,
-    double slope,
-    double intercept,
-    std::string title = ""
+    const std::vector<double>& X,
+    const std::vector<double>& Y,
+    const double& slope,
+    const double& intercept,
+    const std::string& title = ""
     ) {
     matplot::scatter(X, Y);
     // plot the regression line

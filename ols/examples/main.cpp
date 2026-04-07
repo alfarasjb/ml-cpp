@@ -34,7 +34,7 @@
 
 int main() {
 
-    auto [fst, snd] = generate_random_data(
+    auto [X, Y] = generate_random_data(
         100,
         1.9,
         0.5,
@@ -43,7 +43,7 @@ int main() {
         100
     );
     LinReg model;
-    model.fit(fst, snd);
+    model.fit(X, Y);
     model.print_stats();
     model.plot();
     return 0;
