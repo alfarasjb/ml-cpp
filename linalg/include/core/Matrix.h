@@ -51,6 +51,7 @@ public:
     double &operator()(const int i, const int j) { return data_[i][j]; }
     const double& operator()(const int i, const int j) const { return data_[i][j]; }
     [[nodiscard]] Matrix transpose() const;
+    [[nodiscard]] static Matrix identity(const Matrix& a);
     [[nodiscard]] static Matrix identity(int n);
     [[nodiscard]] std::tuple<int, int> shape() const { return { rows_, cols_ }; }
 

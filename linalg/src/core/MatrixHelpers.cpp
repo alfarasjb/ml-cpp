@@ -6,23 +6,6 @@
 #include <stdexcept>
 #include "../../include/core/Matrix.h"
 
-Matrix identity_matrix(const Matrix& a) {
-    // check if nxn. if not, throw error.
-    if (!a.is_square_matrix()) {
-        throw std::runtime_error("Not a square matrix.");
-    }
-    Matrix identity_matrix_a(a.rows(), a.cols(), 0);
-    // size is already equal here.
-    for (int i = 0; i < a.rows(); ++i) {
-        for (int j = 0; j < a.cols(); ++j) {
-            if (i == j) {
-                identity_matrix_a(i, j) = 1.0;
-            }
-        }
-    }
-    return identity_matrix_a;
-}
-
 int find_max_row_for_matrix(const Matrix& a, const int k) {
     int max_row = k;
     for (int i = k + 1; i < a.rows(); ++i) {

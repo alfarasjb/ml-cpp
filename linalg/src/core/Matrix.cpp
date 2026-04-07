@@ -105,22 +105,27 @@ void Matrix::print() const {
     }
 }
 
-Matrix Matrix::identity(const int n) {
+Matrix Matrix::identity(const Matrix& a) {
     // returns nxn matrix with 1 as the diagonal, and 0 everywhere else
     // n should be non-zero
-    if (n == 0) {
-        throw std::runtime_error("Identity matrix should be non-zero.");
+    if (!a.is_square_matrix()) {
+        throw std::runtime_error("Not a square matrix.");
     }
-    Matrix result(n, n); // nxn matrix
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
+    Matrix identity_matrix(a.rows(), a.cols(), 0);
+    for (int i = 0; i < a.rows(); ++i) {
+        for (int j = 0; j < a.cols(); ++j) {
             if (i == j) {
                 // diagonal
-                result(i, j) = 1.0;
+                identity_matrix(i, j) = 1.0;
             }
         }
     }
-    return result;
+    return identity_matrix;
+}
+
+Matrix Matrix::identity(const int n) {
+    const Matrix a(n, n, 0);
+    return identity(a);
 }
 static Matrix convert_column_vector_to_row_vector(const Matrix &vector) {
     if (vector.cols() > 1 && vector.rows() == 1) {
@@ -147,16 +152,16 @@ double dot (const Matrix& a, const Matrix& b) {
 
 Matrix Matrix::inverse() const {
     Matrix a(*this);  // work on a copy
-    Matrix identity = identity_matrix(a);
+    Matrix identity_matrix = identity(a);
     for (int k = 0; k < cols_; ++k) {
         // k is the pivot column.
         // for the pivot column, find the max row index.
         if (const int max_row = find_max_row_for_matrix(a, k); max_row != k) {
             std::swap(a.data_[k], a.data_[max_row]);
-            std::swap(identity.data_[k], identity.data_[max_row]);
+            std::swap(identity_matrix.data_[k], identity_matrix.data_[max_row]);
         }
-        scale_pivot_column(a, k, identity);
-        zero_out(a, k, identity);
+        scale_pivot_column(a, k, identity_matrix);
+        zero_out(a, k, identity_matrix);
     }
-    return identity;
+    return identity_matrix;
 }
