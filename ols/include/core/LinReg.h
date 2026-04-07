@@ -44,7 +44,7 @@ public:
         std::cout << "SST: " << sst_ << std::endl;
         beta_.print();
     }
-    void plot();
+    void plot() const;
 };
 
 #endif //ML_CPP_LINREG_H

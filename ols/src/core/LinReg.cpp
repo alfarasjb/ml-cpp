@@ -35,7 +35,7 @@ void LinReg::fit(
     // goal: calculate beta.
     Matrix X_aug = prepend_ones(X);
     const Matrix X_transposed = X_aug.transpose();
-    // this is 2x1 or 1x2
+    // this is 2x1
     beta_ = (X_transposed * X_aug).inverse() * X_transposed * Y;
 
     // calculate metrics
@@ -74,7 +74,7 @@ double LinReg::r_squared() const {
     return 1 - ssr_ / sst_;
 }
 
-void LinReg::plot() {
+void LinReg::plot() const {
     if (!fitted_) {
         throw std::runtime_error("Model has not been fitted.");
     }
