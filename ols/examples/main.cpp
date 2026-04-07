@@ -2,8 +2,8 @@
 // Created by Jay on 4/6/2026.
 //
 
-#include "../../linalg/include/core/Matrix.h"
-#include "../../ols/include/core/LinReg.h"
+#include "core/Matrix.h"
+#include "core/LinReg.h"
 #include "core/data_gen.h"
 
 // TODO: Put this in unit tests

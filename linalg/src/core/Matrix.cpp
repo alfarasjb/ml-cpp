@@ -2,8 +2,8 @@
 // Created by Jay on 4/5/2026.
 //
 
-#include "../../include/core/Matrix.h"
-#include "../../include/core/MatrixHelpers.h"
+#include "core/Matrix.h"
+#include "core/MatrixHelpers.h"
 #include <iostream>
 #include <stdexcept>
 

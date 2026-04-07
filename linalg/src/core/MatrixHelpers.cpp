@@ -2,7 +2,7 @@
 // Created by Jay on 4/5/2026.
 //
 
-#include "../../include/core/MatrixHelpers.h"
+#include "core/MatrixHelpers.h"
 #include <stdexcept>
 #include "../../include/core/Matrix.h"
 

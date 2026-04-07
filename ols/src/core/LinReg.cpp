@@ -2,11 +2,11 @@
 // Created by Jay on 4/6/2026.
 //
 
-#include "../../include/core/LinReg.h"
+#include "core/LinReg.h"
 #include <vector>
 #include <cmath>
 
-#include "../../../plots/include/plots.h"
+#include "plots.h"
 
 Matrix prepend_ones(const Matrix& X) {
     Matrix x_aug(X.rows(), X.cols() + 1, 1);
