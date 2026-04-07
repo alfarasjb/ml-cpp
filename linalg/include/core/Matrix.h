@@ -50,6 +50,12 @@ public:
     bool IsSquareMatrix() const {
         return rows == cols;
     }
+    bool IsRowVector() const {
+        return cols == 1;
+    }
+    bool IsColumnVector() const {
+        return rows == 1;
+    }
     Matrix inverse();
 };
 
