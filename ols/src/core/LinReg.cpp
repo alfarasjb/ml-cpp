@@ -12,7 +12,7 @@ Matrix prepend_ones(const Matrix& X) {
         for (int j = 1; j < x_aug.cols(); ++j) {
             // start iterating from column index 1 (second column)
             // since we already have a 1s matrix from instantiation.
-            x_aug.data[i][j] = X.data[i][j - 1];
+            x_aug(i, j) = X(i, j - 1);
         }
     }
     return x_aug;
@@ -38,15 +38,15 @@ void LinReg::fit(
     // calculate y_bar
     double total = 0.0;
     for (int i = 0; i < y_row.cols(); ++i) {
-        total += y_row.data[0][i];
+        total += y_row(0, i);
     }
     const double y_bar = total / y_row.cols();
 
     // predict
     y_pred_ = predict(X_aug); // idk the shape
     for (int i = 0; i < Y.rows(); ++i) {
-        const double y_i = Y.data[i][0];
-        const double f_i = y_pred_.data[i][0];
+        const double y_i = Y(i, 0);
+        const double f_i = y_pred_(i, 0);
         ssr_ += std::pow(y_i - f_i, 2);
         sst_ += std::pow(y_i - y_bar, 2);
     }

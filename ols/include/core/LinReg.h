@@ -34,8 +34,8 @@ public:
     LinReg(): beta_(Matrix(0, 0)), y_pred_(Matrix(0, 0)) {};
     void print_stats() const {
         std::cout << "R_2: " << r_squared() << std::endl;
-        std::cout << "Beta_0: " << beta_.data[0][0] << std::endl;
-        std::cout << "Beta_1: " << beta_.data[1][0] << std::endl;
+        std::cout << "Beta_0: " << beta_(0, 0) << std::endl;
+        std::cout << "Beta_1: " << beta_(1, 0) << std::endl;
         std::cout << "SSR: " << ssr_ << std::endl;
         std::cout << "SST: " << sst_ << std::endl;
         beta_.print();

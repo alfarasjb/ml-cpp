@@ -23,10 +23,10 @@ private:
         const std::function<double(double, double)>& op
     ) const;
     int rows_, cols_;
+    Matrix2D data_;
 public:
     [[nodiscard]] int rows() const { return rows_; }
     [[nodiscard]] int cols() const { return cols_; }
-    Matrix2D data;
     // zero matrix with specific dimensions
     Matrix(int rows, int cols);
     // matrix with specified values
@@ -42,20 +42,28 @@ public:
     Matrix operator*(double scalar) const;
     // matmul
     Matrix operator*(const Matrix& other) const;
+    // operator overload for accessing matrix elements
+    // call this by
+    // Matrix my_new_matrix(2, 2); // creates a 2x2 zero matrix
+    // my_new_matrix(1, 1); // gets data_[1][1];
+    // references an element.
+    // non-const matrices
+    double &operator()(const int i, const int j) { return data_[i][j]; }
+    const double& operator()(const int i, const int j) const { return data_[i][j]; }
     [[nodiscard]] Matrix transpose() const;
     [[nodiscard]] static Matrix identity(int n);
     [[nodiscard]] std::tuple<int, int> shape() const { return { rows_, cols_ }; }
 
-    bool is_one_dimensional() const {
+    [[nodiscard]] bool is_one_dimensional() const {
         return rows_ == 1 || cols_ == 1;
     }
-    bool is_square_matrix() const {
+    [[nodiscard]] bool is_square_matrix() const {
         return rows_ == cols_;
     }
-    bool is_row_vector() const {
+    [[nodiscard]] bool is_row_vector() const {
         return rows_ == 1;
     }
-    bool is_column_vector() const {
+    [[nodiscard]] bool is_column_vector() const {
         return cols_ == 1;
     }
     [[nodiscard]] Matrix inverse() const;

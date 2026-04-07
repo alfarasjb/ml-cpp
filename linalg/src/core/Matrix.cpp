@@ -10,18 +10,18 @@
 Matrix::Matrix(const int rows, const int cols)
     : rows_ { rows }
     , cols_ { cols }
-    , data(rows, std::vector(cols, 0.0)) {
+    , data_(rows, std::vector(cols, 0.0)) {
 }
 
 Matrix::Matrix(const int rows, const int cols, const double val)
     : rows_ { rows }
     , cols_ { cols }
-    , data(rows, std::vector(cols, val)) {}
+    , data_(rows, std::vector(cols, val)) {}
 
 Matrix::Matrix(const Matrix2D& data)
     : rows_ { static_cast<int>(data.size()) }
     , cols_ { static_cast<int>(data[0].size()) }
-    , data(data) {}
+    , data_(data) {}
 
 
 Matrix Matrix::elementwise(
@@ -35,7 +35,7 @@ Matrix Matrix::elementwise(
     Matrix result(rows_, cols_);
     for (int i = 0; i < rows_; ++i) {
         for (int j = 0; j < cols_; ++j) {
-            result.data[i][j] = op(data[i][j], other.data[i][j]);
+            result(i, j) = op((*this)(i, j), other(i, j));
         }
     }
     return result;
@@ -59,7 +59,7 @@ Matrix Matrix::operator*(const double scalar) const {
     Matrix new_matrix(rows_, cols_);
     for (int i = 0; i < rows_; ++i) {
         for (int j = 0; j < cols_; ++j) {
-            new_matrix.data[i][j] = data[i][j] * scalar;
+            new_matrix(i, j) = (*this)(i, j) * scalar;
         }
     }
     return new_matrix;
@@ -78,9 +78,9 @@ Matrix Matrix::operator*(const Matrix& other) const {
         for (int j = 0; j < other.cols_; ++j) {
             double sum = 0.0;
             for (int k = 0; k < inner; ++k) {
-                sum += data[i][k] * other.data[k][j];
+                sum += (*this)(i, k) * other(k, j);
             }
-            result.data[i][j] = sum;
+            result(i, j) = sum;
         }
     }
     return result;
@@ -90,7 +90,7 @@ Matrix Matrix::transpose() const {
     Matrix new_matrix(cols_, rows_);
     for (int i = 0; i < rows_; ++i) {
         for (int j = 0; j < cols_; ++j) {
-            new_matrix.data[j][i] = data[i][j];
+            new_matrix(j, i) = (*this)(i, j);
         }
     }
     return new_matrix;
@@ -99,7 +99,7 @@ Matrix Matrix::transpose() const {
 void Matrix::print() const {
     for (int i = 0; i < rows_; ++i) {
         for (int j = 0; j < cols_; ++j) {
-            std:: cout << data[i][j] << " ";
+            std:: cout << (*this)(i, j) << " ";
         }
         std::cout << std::endl;
     }
@@ -116,7 +116,7 @@ Matrix Matrix::identity(const int n) {
         for (int j = 0; j < n; ++j) {
             if (i == j) {
                 // diagonal
-                result.data[i][j] = 1.0;
+                result(i, j) = 1.0;
             }
         }
     }
@@ -134,7 +134,7 @@ double dot (const Matrix& a, const Matrix& b) {
     // nx1 matrix only.
     // num cols a = num rows b
     // transpose conditions: if len a == len b, then transpose
-    if (!a.IsOneDimensional() || !b.IsOneDimensional()) {
+    if (!a.is_one_dimensional() || !b.is_one_dimensional()) {
         throw std::runtime_error("Only Nx1 Matrix is allowed.");
     }
     const Matrix a_transposed = convert_column_vector_to_row_vector(a);
@@ -142,7 +142,7 @@ double dot (const Matrix& a, const Matrix& b) {
     if (a_transposed.cols() != b_transposed.cols()) {
         throw std::runtime_error("Matrix does not have the same dimensionality.");
     }
-    return (a_transposed * b_transposed.transpose()).data[0][0];
+    return (a_transposed * b_transposed.transpose())(0, 0);
 }
 
 Matrix Matrix::inverse() const {
@@ -152,8 +152,8 @@ Matrix Matrix::inverse() const {
         // k is the pivot column.
         // for the pivot column, find the max row index.
         if (const int max_row = find_max_row_for_matrix(a, k); max_row != k) {
-            std::swap(a.data[k], a.data[max_row]);
-            std::swap(identity.data[k], identity.data[max_row]);
+            std::swap(a.data_[k], a.data_[max_row]);
+            std::swap(identity.data_[k], identity.data_[max_row]);
         }
         scale_pivot_column(a, k, identity);
         zero_out(a, k, identity);
