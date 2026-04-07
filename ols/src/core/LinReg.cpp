@@ -6,8 +6,10 @@
 #include <vector>
 #include <cmath>
 #include <matplot/matplot.h>
-#include <iostream>
 #include <ranges>
+
+#include "../../../plots/include/plots.h"
+
 Matrix prepend_ones(const Matrix& X) {
     Matrix x_aug(X.rows(), X.cols() + 1, 1);
     for (int i = 0; i < x_aug.rows(); ++i) {
@@ -24,6 +26,14 @@ void LinReg::fit(
     const Matrix& X, // raw feature matrix
     const Matrix& Y //note: this is a column vector
 ) {
+    // validation
+    bool has_error = false;
+    if (X.rows() != Y.rows()) has_error = true;
+    if (X.rows() == 0 || X.cols() == 0) has_error = true;
+    if (!Y.is_vector()) has_error = true;
+    if (has_error) {
+        throw std::runtime_error("Matrix is invalid for fitting");
+    }
     // reset metrics
     ssr_ = 0;
     sst_ = 0;
@@ -67,28 +77,13 @@ double LinReg::r_squared() const {
 }
 
 void LinReg::plot() {
-    // todo: clean this up
+    if (!X_.is_vector()) {
+        // only for single linear regression.
+        throw std::runtime_error("Only Nx1 Matrix is allowed.");
+    }
     // scatter x vs y true
     // convert to row vector?
-    Matrix X_row(X_);
-    Matrix Y_row(Y_);
-    // we might need a separate VECTOR type/class
-    if (X_.is_column_vector()) {
-        X_row = X_.transpose();
-    }
-    if (Y_.is_column_vector()) {
-        Y_row = Y_.transpose();
-    }
-    std::cout << "XRow \n";
-    X_row.print();
-    matplot::scatter(X_row.data()[0], Y_row.data()[0]);
-
-    // plot the regression line
-    // y_pred = slope scalar mul (x feature matrix) + intercept
-    const double min_val_x = *std::ranges::min_element(X_row.data()[0]);
-    const double max_val_x = *std::ranges::max_element(X_row.data()[0]);
-    const double y_at_x_min = slope() * min_val_x + intercept();
-    const double y_at_x_max = slope() * max_val_x + intercept();
-    matplot::line(min_val_x, y_at_x_min, max_val_x, y_at_x_max);
-    matplot::show();
+    const std::vector<double> X_row = X_.as_vector();
+    const std::vector<double> Y_row = Y_.as_vector();
+    scatter_with_line(X_row, Y_row, slope(), intercept());
 }
