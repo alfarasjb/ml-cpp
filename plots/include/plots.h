@@ -1,6 +1,14 @@
 #ifndef ML_CPP_PLOTS_H
 #define ML_CPP_PLOTS_H
 
-void demo_plot();
+#include <string>
+#include <vector>
+void scatter_with_line(
+    const std::vector<double>& X,
+    const std::vector<double>& Y,
+    const double& slope,
+    const double& intercept,
+    const std::string& title = ""
+);
 
 #endif //ML_CPP_PLOTS_H

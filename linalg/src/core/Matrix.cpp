@@ -2,8 +2,8 @@
 // Created by Jay on 4/5/2026.
 //
 
-#include "../../include/core/Matrix.h"
-#include "../../include/core/MatrixHelpers.h"
+#include "core/Matrix.h"
+#include "core/MatrixHelpers.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -164,4 +164,23 @@ Matrix Matrix::inverse() const {
         zero_out(a, k, identity_matrix);
     }
     return identity_matrix;
+}
+
+std::vector<double> Matrix::as_vector() const {
+    // flattens nx1 or 1xn to a flat sequence. throws it not vector
+    if (!is_vector()) {
+        throw std::runtime_error("Only Nx1 Matrix is allowed.");
+    }
+    std::vector<double> result;
+
+    if (is_row_vector()) {
+        for (int i = 0; i < cols_; ++i) {
+            result.push_back(data_[0][i]);
+        }
+    } else {
+        for (int i = 0; i < rows_; ++i) {
+            result.push_back(data_[i][0]);
+        }
+    }
+    return result;
 }
