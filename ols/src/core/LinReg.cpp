@@ -25,13 +25,9 @@ void LinReg::fit(
     const Matrix& Y //note: this is a column vector
 ) {
     // validation
-    bool has_error = false;
-    if (X.rows() != Y.rows()) has_error = true;
-    if (X.rows() == 0 || X.cols() == 0) has_error = true;
-    if (!Y.is_vector()) has_error = true;
-    if (has_error) {
-        throw std::runtime_error("Matrix is invalid for fitting");
-    }
+    if (X.rows() != Y.rows()) throw std::invalid_argument("X and Y must have the same number of rows");
+    if (X.rows() == 0 || X.cols() == 0) throw std::invalid_argument("X must not be empty");
+    if (!Y.is_vector()) throw std::invalid_argument("Y must be a column vector");
     // reset metrics
     ssr_ = 0;
     sst_ = 0;
@@ -39,7 +35,7 @@ void LinReg::fit(
     // goal: calculate beta.
     Matrix X_aug = prepend_ones(X);
     const Matrix X_transposed = X_aug.transpose();
-    // this is 2x1 or 1x2 idk
+    // this is 2x1 or 1x2
     beta_ = (X_transposed * X_aug).inverse() * X_transposed * Y;
 
     // calculate metrics
@@ -53,7 +49,7 @@ void LinReg::fit(
     const double y_bar = total / y_row.cols();
 
     // predict
-    y_pred_ = predict(X_aug); // idk the shape
+    y_pred_ = predict(X_aug);
     for (int i = 0; i < Y.rows(); ++i) {
         const double y_i = Y(i, 0);
         const double f_i = y_pred_(i, 0);
@@ -66,15 +62,22 @@ void LinReg::fit(
 }
 
 Matrix LinReg::predict(const Matrix& X) const {
+    // nice to have: abstract this into some wrapper.
     Matrix y_hat = X * beta_;
     return y_hat;
 }
 
 double LinReg::r_squared() const {
+    if (!fitted_) {
+        throw std::runtime_error("Model has not been fitted.");
+    }
     return 1 - ssr_ / sst_;
 }
 
 void LinReg::plot() {
+    if (!fitted_) {
+        throw std::runtime_error("Model has not been fitted.");
+    }
     if (!X_.is_vector()) {
         // only for single linear regression.
         throw std::runtime_error("Only Nx1 Matrix is allowed.");
