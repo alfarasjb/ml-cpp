@@ -85,5 +85,6 @@ void LinReg::plot() {
     // convert to row vector?
     const std::vector<double> X_row = X_.as_vector();
     const std::vector<double> Y_row = Y_.as_vector();
-    scatter_with_line(X_row, Y_row, slope(), intercept());
+    const std::string title = "Linear Regression with R2 " + std::to_string(r_squared());
+    scatter_with_line(X_row, Y_row, slope(), intercept(), title);
 }
