@@ -3,13 +3,8 @@ project(ml-cpp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include(FetchContent)
-FetchContent_Declare(matplotplusplus
-        GIT_REPOSITORY https://github.com/alandefreitas/matplotplusplus.git
-        GIT_TAG        v1.2.1
-        GIT_SHALLOW    TRUE
-)
-FetchContent_MakeAvailable(matplotplusplus)
+
+find_package(Matplot++ CONFIG REQUIRED)
 
 add_subdirectory(linalg)
 add_subdirectory(ols)
