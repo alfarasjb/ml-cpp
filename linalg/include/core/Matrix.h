@@ -27,6 +27,7 @@ private:
 public:
     [[nodiscard]] int rows() const { return rows_; }
     [[nodiscard]] int cols() const { return cols_; }
+    Matrix2D data() const { return data_; }
     // zero matrix with specific dimensions
     Matrix(int rows, int cols);
     // matrix with specified values
