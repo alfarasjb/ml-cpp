@@ -29,9 +29,35 @@ std::pair<double, Matrix> compute_loss_and_gradient(
 
     const Matrix residuals = X * theta - y;
     // loss
-    double loss = (1.0 / X.rows()) * dot(residuals.transpose(), residuals);
+    double loss = 0.5 * dot(residuals.transpose(), residuals);
     Matrix gradient = X.transpose() * residuals;
     return std::make_pair(loss, gradient);
+}
+double column_mean(const Matrix& X, int col) {
+    double sum = 0.0;
+    for (int i = 0; i < X.rows(); ++i) sum += X(i, col);
+    return sum / X.rows();
+}
+
+double column_std(const Matrix& X, int col, double mean) {
+    double sq_sum = 0.0;
+    for (int i = 0; i < X.rows(); ++i) {
+        double diff = X(i, col) - mean;
+        sq_sum += diff * diff;
+    }
+    return std::sqrt(sq_sum / X.rows());  // population std, not sample
+}
+
+Matrix standard_scale(const Matrix& X) {
+    Matrix X_scaled(X.rows(), X.cols());
+    for (int j = 0; j < X.cols(); ++j) {
+        double mu = column_mean(X, j);
+        double sigma = column_std(X, j, mu);
+        for (int i = 0; i < X.rows(); ++i) {
+            X_scaled(i, j) = (X(i, j) - mu) / sigma;
+        }
+    }
+    return X_scaled;
 }
 
 int main() {
@@ -39,14 +65,15 @@ int main() {
         100,
         1.9,
         0.5,
-        5,
+        1,
         0,
         100
     );
-    Matrix X_prep = prepend_ones(X);
+    Matrix X_scaled = standard_scale(X);
+    Matrix X_prep = prepend_ones(X_scaled);
     Matrix theta(X_prep.cols(), 1, 0.0);
-    const double learning_rate = 0.000001;
-    const int max_iters = 20;
+    const double learning_rate = 0.001;
+    const int max_iters = 100;
     std::vector<double> losses;
     for (int i = 0; i < max_iters; ++i) {
         auto [loss, grad] = compute_loss_and_gradient(X_prep, Y, theta);
@@ -54,6 +81,14 @@ int main() {
         theta = theta - grad * learning_rate;
         std::cout << "Loss " << loss << std::endl;
     }
+    Matrix theta_ols = (X_prep.transpose() * X_prep).inverse() * X_prep.transpose() * Y;
+
+    std::cout << "\n=== Results ===\n";
+    std::cout << "GD theta:\n";
+    theta.print();
+    std::cout << "OLS theta:\n";
+    theta_ols.print();
     plot_loss_curve(losses);
+
     return 0;
 }
