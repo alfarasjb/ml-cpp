@@ -2,6 +2,7 @@
 // Created by Jay on 4/8/2026.
 //
 
+#include <filesystem>
 #include <iostream>
 #include <ostream>
 
@@ -10,6 +11,8 @@
 
 #include "plots.h"
 #include "core/data_gen.h"
+#include <fstream>
+#include <iomanip>
 
 // todo: clean this up later. prepend_ones already exists in linear regression library
 Matrix prepend_ones(const Matrix& X) {
@@ -29,8 +32,9 @@ std::pair<double, Matrix> compute_loss_and_gradient(
 
     const Matrix residuals = X * theta - y;
     // loss
-    double loss = 0.5 * dot(residuals.transpose(), residuals);
-    Matrix gradient = X.transpose() * residuals;
+    double scale_factor = 0.5 / X.rows();
+    double loss = scale_factor * dot(residuals.transpose(), residuals);
+    Matrix gradient = X.transpose() * residuals * (1.0 / X.rows());
     return std::make_pair(loss, gradient);
 }
 double column_mean(const Matrix& X, int col) {
@@ -65,21 +69,46 @@ int main() {
         100,
         1.9,
         0.5,
-        1,
+        15,
         0,
         100
     );
     Matrix X_scaled = standard_scale(X);
     Matrix X_prep = prepend_ones(X_scaled);
     Matrix theta(X_prep.cols(), 1, 0.0);
-    const double learning_rate = 0.001;
+
+    theta.print();
+    const double learning_rate = 0.05;
     const int max_iters = 100;
     std::vector<double> losses;
+    std::cout << "Writing to: " << std::filesystem::absolute("artifacts") << "\n";
+    std::filesystem::create_directories("artifacts");
+    std::ofstream data_out("artifacts/dataset.csv");
+    data_out << std::setprecision(16);
+    data_out << "x,y\n";
+    for (int i = 0; i < X_scaled.rows(); ++i) {
+        data_out << X_scaled(i, 0) << "," << Y(i, 0) << "\n";
+    }
+    data_out.close();
+
+
+    std::ofstream out("artifacts/gd_trace.csv");
+    out << std::setprecision(16);
+    out << "iter,w,b,loss\n";
+
+
+
     for (int i = 0; i < max_iters; ++i) {
         auto [loss, grad] = compute_loss_and_gradient(X_prep, Y, theta);
         losses.push_back(loss);
+        double intercept = theta(0, 0);
+        double slope = theta(1, 0);
+
+        out << i << "," << slope << "," << intercept << "," << loss << "\n";
         theta = theta - grad * learning_rate;
-        std::cout << "Loss " << loss << std::endl;
+        // needs an assertion somewhere. but for the sake of generating the artifact, this is ok.
+
+        std::cout << "iter " << i << " Loss " << loss << std::endl;
     }
     Matrix theta_ols = (X_prep.transpose() * X_prep).inverse() * X_prep.transpose() * Y;
 
@@ -89,6 +118,5 @@ int main() {
     std::cout << "OLS theta:\n";
     theta_ols.print();
     plot_loss_curve(losses);
-
     return 0;
 }
