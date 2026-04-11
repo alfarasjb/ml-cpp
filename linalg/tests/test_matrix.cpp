@@ -3,7 +3,7 @@
 //
 #include <cassert>
 #include <iostream>
-#include <core/Matrix.h>
+#include <matrix.h>
 
 void test_constructors() {
     Matrix a(2, 2);

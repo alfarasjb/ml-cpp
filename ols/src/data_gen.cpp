@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "core/Matrix.h"
+#include "matrix.h"
 std::pair<Matrix, Matrix> generate_random_data(
     const int n,
     const double slope,

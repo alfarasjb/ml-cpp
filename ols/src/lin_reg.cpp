@@ -2,7 +2,7 @@
 // Created by Jay on 4/6/2026.
 //
 
-#include "core/LinReg.h"
+#include "lin_reg.h"
 #include <vector>
 #include <cmath>
 

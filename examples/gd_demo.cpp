@@ -6,11 +6,11 @@
 #include <iostream>
 #include <ostream>
 
-#include "core/Matrix.h"
+#include "matrix.h"
 #include <utility>
 
 #include "plots.h"
-#include "core/data_gen.h"
+#include "data_gen.h"
 #include <fstream>
 #include <iomanip>
 

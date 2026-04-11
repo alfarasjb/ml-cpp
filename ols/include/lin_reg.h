@@ -4,7 +4,7 @@
 
 #ifndef ML_CPP_LINREG_H
 #define ML_CPP_LINREG_H
-#include "core/Matrix.h"
+#include "matrix.h"
 #include <iostream>
 
 // this should return a model

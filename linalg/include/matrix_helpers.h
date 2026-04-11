@@ -4,7 +4,7 @@
 
 #ifndef ML_CPP_MATRIXHELPERS_H
 #define ML_CPP_MATRIXHELPERS_H
-#include "Matrix.h"
+#include "matrix.h"
 
 
 int find_max_row_for_matrix(const Matrix& a, int k);
