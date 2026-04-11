@@ -1,3 +1,67 @@
 //
 // Created by Jay on 4/8/2026.
 //
+
+
+#include "gradient_descent.h"
+#include <utility>
+#include <filesystem>
+#include <iostream>
+#include <fstream>
+#include "plots.h"
+
+std::pair<double, Matrix> GradientDescent::compute_loss_and_gradient() const {
+    const Matrix residuals = X * theta - Y;
+    // loss
+    const double scale_factor = 0.5 / X.rows();
+    const double loss = scale_factor * dot(residuals.transpose(), residuals);
+    Matrix gradient = X.transpose() * residuals * (1.0 / X.rows());
+    return std::make_pair(loss, gradient);
+}
+
+void GradientDescent::start() {
+    // clear the trace
+    trace.clear();
+    for (int i = 0; i < max_iters; ++i) {
+        auto[loss, grad] = compute_loss_and_gradient();
+
+        const double intercept = theta(0, 0);
+        const double slope = theta(1, 0);
+        trace.push_back({
+            loss,
+            slope,
+            intercept
+        });
+
+        theta = theta - grad * learning_rate; // update
+    }
+}
+
+void GradientDescent::plot() const {
+    std::vector<double> losses;
+    for (const auto& [loss, slope, intercept]: trace) {
+        losses.push_back(loss);
+    }
+    plot_loss_curve(losses);
+}
+
+void GradientDescent::export_trace_to_csv() const {
+    std::cout << "Writing to: " << std::filesystem::absolute("artifacts") << "\n";
+    std::filesystem::create_directories("artifacts");
+    std::ofstream data_out("artifacts/dataset.csv");
+    data_out << std::setprecision(16);
+    data_out << "x,y\n";
+    // Note: X has prepended ones.
+    for (int i = 0; i < X.rows(); ++i) {
+        data_out << X(i, 1) << "," << Y(i, 0) << "\n";
+    }
+    data_out.close();
+    std::ofstream out("artifacts/gd_trace.csv");
+    out << std::setprecision(16);
+    out << "iter,w,b,loss\n";
+
+    int i = 0;
+    for (const auto& [loss, slope, intercept]: trace) {
+        out << i++ << "," << slope << "," << intercept << "," << loss << "\n";
+    }
+}
