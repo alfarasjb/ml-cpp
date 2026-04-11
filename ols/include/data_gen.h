@@ -4,7 +4,7 @@
 
 #ifndef ML_CPP_DATA_GEN_H
 #define ML_CPP_DATA_GEN_H
-#include "core/Matrix.h"
+#include "matrix.h"
 std::pair<Matrix, Matrix> generate_random_data(
     int n,
     double slope,

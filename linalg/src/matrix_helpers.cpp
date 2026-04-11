@@ -2,9 +2,9 @@
 // Created by Jay on 4/5/2026.
 //
 
-#include "core/MatrixHelpers.h"
+#include "matrix_helpers.h"
 #include <stdexcept>
-#include "../../include/core/Matrix.h"
+#include "matrix.h"
 
 int find_max_row_for_matrix(const Matrix& a, const int k) {
     int max_row = k;

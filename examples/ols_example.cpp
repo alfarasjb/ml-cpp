@@ -2,9 +2,9 @@
 // Created by Jay on 4/6/2026.
 //
 
-#include "core/Matrix.h"
-#include "core/LinReg.h"
-#include "core/data_gen.h"
+#include "matrix.h"
+#include "lin_reg.h"
+#include "data_gen.h"
 
 // TODO: Put this in unit tests
 // Matrix X({

@@ -26,3 +26,22 @@ void scatter_with_line(
     matplot::grid(true);
     matplot::show();
 }
+
+void plot_loss_curve(
+    const std::vector<double>& losses,
+    const std::string& title
+) {
+    std::vector<double> iterations(losses.size());
+    for (size_t i = 0; i < losses.size(); ++i) {
+        iterations[i] = static_cast<double>(i);
+    }
+    auto l = matplot::plot(iterations, losses);
+    l->line_width(2);
+    l->color({0.85, 0.2, 0.2});
+
+    matplot::title(title);
+    matplot::xlabel("Iteration");
+    matplot::ylabel("Loss");
+    matplot::grid(true);
+    matplot::show();
+}
