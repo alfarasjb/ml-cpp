@@ -5,3 +5,4 @@ add_library(ols
 target_include_directories(ols PUBLIC include/)
 target_link_libraries(ols PUBLIC linalg)
 target_link_libraries(ols PUBLIC plots)
+target_link_libraries(ols PUBLIC optimizers)

@@ -7,7 +7,7 @@
 #include "matrix.h"
 std::pair<Matrix, Matrix> generate_random_data(
     int n,
-    double slope,
+    const Matrix& weights,
     double intercept,
     double noise_std,
     double x_min,

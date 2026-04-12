@@ -7,19 +7,7 @@
 #include <cmath>
 
 #include "plots.h"
-
-Matrix prepend_ones(const Matrix& X) {
-    Matrix x_aug(X.rows(), X.cols() + 1, 1);
-    for (int i = 0; i < x_aug.rows(); ++i) {
-        for (int j = 1; j < x_aug.cols(); ++j) {
-            // start iterating from column index 1 (second column)
-            // since we already have a 1s matrix from instantiation.
-            x_aug(i, j) = X(i, j - 1);
-        }
-    }
-    return x_aug;
-}
-
+#include "optimizers_helpers.h"
 void LinReg::fit(
     const Matrix& X, // raw feature matrix
     const Matrix& Y //note: this is a column vector
@@ -62,6 +50,10 @@ void LinReg::fit(
 }
 
 Matrix LinReg::predict(const Matrix& X) const {
+    // x cols must match beta rows
+    if (X.cols() != beta_.rows()) {
+        throw std::runtime_error("Shape mismatch. Feature space does not match.");
+    }
     // nice to have: abstract this into some wrapper.
     Matrix y_hat = X * beta_;
     return y_hat;
@@ -80,12 +72,13 @@ void LinReg::plot() const {
     }
     if (!X_.is_vector()) {
         // only for single linear regression.
-        throw std::runtime_error("Only Nx1 Matrix is allowed.");
+        std::cout << "Only Nx1 Matrix is supported for plotting" << std::endl;
     }
     // scatter x vs y true
     // convert to row vector?
     const std::vector<double> X_row = X_.as_vector();
     const std::vector<double> Y_row = Y_.as_vector();
     const std::string title = "Linear Regression with R2 " + std::to_string(r_squared());
-    scatter_with_line(X_row, Y_row, slope(), intercept(), title);
+    // this will break
+    scatter_with_line(X_row, Y_row, coefficients()[0], bias(), title);
 }

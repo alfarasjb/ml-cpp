@@ -3,6 +3,7 @@
 //
 #include <matrix.h>
 Matrix prepend_ones(const Matrix& X) {
+    // we never get an empty matrix
     Matrix x_aug(X.rows(), X.cols() + 1, 1);
     for (int i = 0; i < x_aug.rows(); ++i) {
         for (int j = 1; j < x_aug.cols(); ++j) {
@@ -16,12 +17,19 @@ Matrix prepend_ones(const Matrix& X) {
 
 
 double column_mean(const Matrix& X, const int col) {
+    if (col < 0 || col >= X.cols()) {
+        throw std::out_of_range("Column index out of range.");
+    }
+
     double sum = 0.0;
     for (int i = 0; i < X.rows(); ++i) sum += X(i, col);
     return sum / X.rows();
 }
 
 double column_std(const Matrix& X, const int col, const double mean) {
+    if (col < 0 || col >= X.cols()) {
+        throw std::out_of_range("Column index out of range.");
+    }
     double sq_sum = 0.0;
     for (int i = 0; i < X.rows(); ++i) {
         double diff = X(i, col) - mean;
