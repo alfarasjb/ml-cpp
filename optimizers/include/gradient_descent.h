@@ -10,8 +10,8 @@
 
 struct GDTrace {
     double loss;
-    double slope;
-    double intercept;
+    std::vector<double> coefficients;
+    double bias;
 };
 
 class GradientDescent {

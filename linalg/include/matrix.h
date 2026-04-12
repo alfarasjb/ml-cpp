@@ -93,6 +93,9 @@ public:
     [[nodiscard]] bool is_vector() const {
         return is_column_vector() || is_row_vector();
     }
+    [[nodiscard]] double is_empty_matrix() const {
+        return rows_ == 0 && cols_ == 0;
+    };
 };
 
 

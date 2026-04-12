@@ -25,8 +25,14 @@ public:
     [[nodiscard]] double sst() const { return sst_; }
     [[nodiscard]] double y_bar() const { return y_bar_; }
     [[nodiscard]] Matrix beta() const { return beta_; }
-    [[nodiscard]] double slope() const { return beta_(1, 0); }
-    [[nodiscard]] double intercept() const { return beta_(0, 0); }
+    [[nodiscard]] std::vector<double> coefficients() const {
+        std::vector<double> coeff;
+        for (int i = 1; i < beta_.rows() ; ++i) {
+            coeff.push_back(beta_(i, 0));
+        }
+        return coeff;
+    }
+    [[nodiscard]] double bias() const { return beta_(0, 0); }
     // fit should call the predict function so we can calculate r_squared.
     // after predicting, we should set ssr and sst. these won't change.
     // everytime the data would change, we would need to call fit, which calls predict
@@ -38,10 +44,9 @@ public:
     LinReg(): beta_(Matrix(0, 0)), y_pred_(Matrix(0, 0)), X_(Matrix(0, 0)), Y_(Matrix(0, 0)) {};
     void print_stats() const {
         std::cout << "R_2: " << r_squared() << std::endl;
-        std::cout << "Beta_0: " << beta_(0, 0) << std::endl;
-        std::cout << "Beta_1: " << beta_(1, 0) << std::endl;
         std::cout << "SSR: " << ssr_ << std::endl;
         std::cout << "SST: " << sst_ << std::endl;
+        std::cout << "Beta " << std::endl;
         beta_.print();
     }
     void plot() const;

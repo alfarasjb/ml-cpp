@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 int Matrix::validate_matrix_dimensions(const int dim) {
-    if (dim <= 0) {
+    if (dim < 0) {
         throw std::runtime_error("Invalid matrix dimension.");
     }
     return dim;

@@ -28,12 +28,17 @@ void GradientDescent::start() {
     for (int i = 0; i < max_iters; ++i) {
         auto[loss, grad] = compute_loss_and_gradient();
 
-        const double intercept = theta(0, 0);
-        const double slope = theta(1, 0);
+        // theta is a column vector
+        const double bias = theta(0, 0);
+        std::vector<double> coefficients;
+        for (int j = 1; j < theta.rows(); ++j) {
+            coefficients.push_back(theta(j, 0));
+        }
+
         trace.push_back({
             loss,
-            slope,
-            intercept
+            coefficients,
+            bias
         });
 
         theta = theta - grad * learning_rate; // update
@@ -46,13 +51,17 @@ void GradientDescent::plot() const {
         return;
     }
     std::vector<double> losses;
-    for (const auto& [loss, slope, intercept]: trace) {
+    for (const auto& [loss, coefficients, bias]: trace) {
         losses.push_back(loss);
     }
     plot_loss_curve(losses);
 }
 
 void GradientDescent::export_trace_to_csv() const {
+    if (X.cols() != 2) {
+        std::cout << "export_trace_to_csv only supports single-feature models." << std::endl;
+        return;
+    }
     if (trace.empty()) {
         std::cout << "Trace is empty" << std::endl;
         return;
@@ -72,7 +81,9 @@ void GradientDescent::export_trace_to_csv() const {
     out << "iter,w,b,loss\n";
 
     int i = 0;
-    for (const auto& [loss, slope, intercept]: trace) {
-        out << i++ << "," << slope << "," << intercept << "," << loss << "\n";
+    for (const auto& [loss, coefficient, bias]: trace) {
+        // this line will break. ignore for now.
+        // there is no point exporting multi feature coefficients.
+        out << i++ << "," << coefficient[0] << "," << bias << "," << loss << "\n";
     }
 }
