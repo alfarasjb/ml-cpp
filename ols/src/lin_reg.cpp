@@ -7,19 +7,7 @@
 #include <cmath>
 
 #include "plots.h"
-
-Matrix prepend_ones(const Matrix& X) {
-    Matrix x_aug(X.rows(), X.cols() + 1, 1);
-    for (int i = 0; i < x_aug.rows(); ++i) {
-        for (int j = 1; j < x_aug.cols(); ++j) {
-            // start iterating from column index 1 (second column)
-            // since we already have a 1s matrix from instantiation.
-            x_aug(i, j) = X(i, j - 1);
-        }
-    }
-    return x_aug;
-}
-
+#include "optimizers_helpers.h"
 void LinReg::fit(
     const Matrix& X, // raw feature matrix
     const Matrix& Y //note: this is a column vector
