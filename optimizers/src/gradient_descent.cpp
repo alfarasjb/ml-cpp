@@ -11,6 +11,9 @@
 #include "plots.h"
 
 std::pair<double, Matrix> GradientDescent::compute_loss_and_gradient() const {
+    if (X.cols() != theta.rows()) {
+        throw std::runtime_error("Invalid dimensions");
+    }
     const Matrix residuals = X * theta - Y;
     // loss
     const double scale_factor = 0.5 / X.rows();
@@ -38,6 +41,10 @@ void GradientDescent::start() {
 }
 
 void GradientDescent::plot() const {
+    if (trace.empty()) {
+        std::cout << "Trace is empty" << std::endl;
+        return;
+    }
     std::vector<double> losses;
     for (const auto& [loss, slope, intercept]: trace) {
         losses.push_back(loss);
@@ -46,6 +53,10 @@ void GradientDescent::plot() const {
 }
 
 void GradientDescent::export_trace_to_csv() const {
+    if (trace.empty()) {
+        std::cout << "Trace is empty" << std::endl;
+        return;
+    }
     std::cout << "Writing to: " << std::filesystem::absolute("artifacts") << "\n";
     std::filesystem::create_directories("artifacts");
     std::ofstream data_out("artifacts/dataset.csv");

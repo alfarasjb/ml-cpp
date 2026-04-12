@@ -7,22 +7,32 @@
 #include <iostream>
 #include <stdexcept>
 
-Matrix::Matrix(const int rows, const int cols)
-    : rows_ { rows }
-    , cols_ { cols }
-    , data_(rows, std::vector(cols, 0.0)) {
+int Matrix::validate_matrix_dimensions(const int dim) {
+    if (dim <= 0) {
+        throw std::runtime_error("Invalid matrix dimension.");
+    }
+    return dim;
 }
 
+Matrix::Matrix(const int rows, const int cols): Matrix(rows, cols, 0.0) {}
+
 Matrix::Matrix(const int rows, const int cols, const double val)
-    : rows_ { rows }
-    , cols_ { cols }
-    , data_(rows, std::vector(cols, val)) {}
+    : rows_ { validate_matrix_dimensions(rows) }
+    , cols_ { validate_matrix_dimensions(cols) } {
+    data_ = Matrix2D(rows, std::vector(cols, val));
+}
 
+// matrix dims are never negative here.
 Matrix::Matrix(const Matrix2D& data)
-    : rows_ { static_cast<int>(data.size()) }
-    , cols_ { static_cast<int>(data[0].size()) }
-    , data_(data) {}
-
+    : rows_ { validate_matrix_dimensions(static_cast<int>(data.size())) }
+    , cols_ { validate_matrix_dimensions(static_cast<int>(data[0].size())) }
+    , data_(data) {
+    for (const auto& row : data) {
+        if (row.size() != static_cast<size_t>(cols_)) {
+            throw std::runtime_error("Jagged rows. all rows must have the same number of columns.");
+        }
+    }
+}
 
 Matrix Matrix::elementwise(
     const Matrix &other,
@@ -151,6 +161,10 @@ double dot (const Matrix& a, const Matrix& b) {
 }
 
 Matrix Matrix::inverse() const {
+    // check if matrix is square. if not, throw an error
+    if (rows_ != cols_) {
+        throw std::runtime_error("Inverse is not allowed for non-square matrices.");
+    }
     Matrix a(*this);  // work on a copy
     Matrix identity_matrix = identity(a);
     for (int k = 0; k < cols_; ++k) {

@@ -27,7 +27,17 @@ public:
     , Y { Y }
     , theta { Matrix(X.cols(), 1, 0.0) }
     , learning_rate { learning_rate }
-    , max_iters { max_iters } {}
+    , max_iters { max_iters } {
+        if (X.rows() != Y.rows()) {
+            throw std::runtime_error("Feature space and label space shape do not match.");
+        }
+        if (!Y.is_column_vector()) {
+            throw std::runtime_error("Label space needs to be a column vector.");
+        }
+        if (learning_rate <= 0 || max_iters <= 0) {
+            throw std::runtime_error("Learning rate and Num iters must be greater than zero.");
+        }
+    }
 
     Matrix theta;
 

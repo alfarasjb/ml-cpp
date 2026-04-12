@@ -62,6 +62,10 @@ void LinReg::fit(
 }
 
 Matrix LinReg::predict(const Matrix& X) const {
+    // x cols must match beta rows
+    if (X.cols() != beta_.rows()) {
+        throw std::runtime_error("Shape mismatch. Feature space does not match.");
+    }
     // nice to have: abstract this into some wrapper.
     Matrix y_hat = X * beta_;
     return y_hat;

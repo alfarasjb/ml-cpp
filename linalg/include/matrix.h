@@ -6,6 +6,7 @@
 #pragma once // tells the compiler to only include this file once.
 #include <vector>
 #include <functional>
+#include <stdexcept>
 #include <tuple>
 #ifndef ML_CPP_MATRIX_H
 #define ML_CPP_MATRIX_H
@@ -24,6 +25,8 @@ private:
     ) const;
     int rows_, cols_;
     Matrix2D data_;
+    // checks if matrix has valid dimensions
+    int validate_matrix_dimensions(int dim);
 public:
     [[nodiscard]] int rows() const { return rows_; }
     [[nodiscard]] int cols() const { return cols_; }
@@ -49,8 +52,25 @@ public:
     // my_new_matrix(1, 1); // gets data_[1][1];
     // references an element.
     // non-const matrices
-    double &operator()(const int i, const int j) { return data_[i][j]; }
-    const double& operator()(const int i, const int j) const { return data_[i][j]; }
+    double &operator()(const int i, const int j) {
+        if (i >= rows_ || j >= cols_) {
+            throw std::out_of_range("Index out of range.");
+        }
+        if (i < 0 || j < 0) {
+            throw std::out_of_range("Only positive indexes allowed.");
+        }
+        return data_[i][j];
+    }
+    const double& operator()(const int i, const int j) const {
+        if (i >= rows_ || j >= cols_) {
+            throw std::out_of_range("Index out of range.");
+        }
+
+        if (i < 0 || j < 0) {
+            throw std::out_of_range("Only positive indexes allowed.");
+        }
+        return data_[i][j];
+    }
     [[nodiscard]] Matrix transpose() const;
     [[nodiscard]] static Matrix identity(const Matrix& a);
     [[nodiscard]] static Matrix identity(int n);
