@@ -18,7 +18,7 @@ int main() {
     try {
         auto [X, Y] = generate_random_data(
             100,
-            1.9,
+            Matrix({{ 1.9 }}),
             0.5,
             15,
             0,

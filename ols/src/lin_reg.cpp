@@ -84,7 +84,7 @@ void LinReg::plot() const {
     }
     if (!X_.is_vector()) {
         // only for single linear regression.
-        throw std::runtime_error("Only Nx1 Matrix is allowed.");
+        std::cout << "Only Nx1 Matrix is supported for plotting" << std::endl;
     }
     // scatter x vs y true
     // convert to row vector?
