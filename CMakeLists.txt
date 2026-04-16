@@ -10,6 +10,7 @@ add_subdirectory(linalg)
 add_subdirectory(ols)
 add_subdirectory(plots)
 add_subdirectory(optimizers)
+add_subdirectory(monte_carlo)
 
 add_executable(linalg_example examples/linalg_example.cpp)
 target_link_libraries(linalg_example PRIVATE linalg)
@@ -25,3 +26,9 @@ target_link_libraries(gd_demo PRIVATE optimizers)
 
 add_executable(multi_linreg_example examples/multi_linreg_example.cpp)
 target_link_libraries(multi_linreg_example PRIVATE ols optimizers)
+
+add_executable(mc_demo examples/mc_demo.cpp)
+target_link_libraries(mc_demo PRIVATE monte_carlo)
+
+add_executable(mc_benchmark examples/mc_benchmark.cpp)
+target_link_libraries(mc_benchmark PRIVATE monte_carlo)
