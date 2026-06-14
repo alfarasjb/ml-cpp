@@ -6,6 +6,7 @@
 #define ML_CPP_PAYOFF_H
 #include <algorithm>
 double payoff(const double S_t, const double K) {
-    return std::max(S_t, K);
+    const double diff = S_t - K;
+    return std::max(diff, 0.0);
 }
 #endif //ML_CPP_PAYOFF_H

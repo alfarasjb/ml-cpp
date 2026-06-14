@@ -32,3 +32,5 @@ target_link_libraries(mc_demo PRIVATE monte_carlo)
 
 add_executable(mc_benchmark examples/mc_benchmark.cpp)
 target_link_libraries(mc_benchmark PRIVATE monte_carlo)
+
+add_executable(thread_pool_demo examples/thread_pool_demo.cpp)
